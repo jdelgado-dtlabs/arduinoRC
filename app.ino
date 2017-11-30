@@ -8,15 +8,15 @@
 #define RC_CH2  1
 #define RC_CH3  2
 
-#define RC_CH1_INPUT  A0
-#define RC_CH2_INPUT  A1
-#define RC_CH3_INPUT  A2
+#define RC_CH1_INPUT  A0 //CH1 (Steering)
+#define RC_CH2_INPUT  A1 //CH2 (Throttle)
+#define RC_CH3_INPUT  A2 //CH3 (On/Off Aux Switch)
 
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
-Adafruit_DCMotor *rcMotor1 = AFMS.getMotor(1);
-Adafruit_DCMotor *rcMotor2 = AFMS.getMotor(2);
-Adafruit_DCMotor *rcMotor3 = AFMS.getMotor(3);
-Adafruit_DCMotor *rcMotor4 = AFMS.getMotor(4);
+Adafruit_DCMotor *rcMotor1 = AFMS.getMotor(1); // Left Front
+Adafruit_DCMotor *rcMotor2 = AFMS.getMotor(2); // Right Front
+Adafruit_DCMotor *rcMotor3 = AFMS.getMotor(3); // Right Rear
+Adafruit_DCMotor *rcMotor4 = AFMS.getMotor(4); // Left Rear
 
 uint16_t rc_values[RC_NUM_CHANNELS];
 uint32_t rc_start[RC_NUM_CHANNELS];
