@@ -67,17 +67,19 @@ void forwardRC(int speed, char direction, int turnRate)
         rcMotor4->setSpeed(speed);
     }
     if (direction == 'L'){
-        int speedLeft = speed + turnRate;
-        rcMotor1->setSpeed(speed);
-        rcMotor2->setSpeed(speedLeft);
-        rcMotor3->setSpeed(speedLeft);
-        rcMotor4->setSpeed(speed);
-    }
-    if (direction == 'R'){
+        int speedLeft = speed - turnRate;
         int speedRight = speed + turnRate;
         rcMotor1->setSpeed(speedRight);
-        rcMotor2->setSpeed(speed);
-        rcMotor3->setSpeed(speed);
+        rcMotor2->setSpeed(speedLeft);
+        rcMotor3->setSpeed(speedLeft);
+        rcMotor4->setSpeed(speedRight);
+    }
+    if (direction == 'R'){
+        int speedLeft = speed + turnRate;
+        int speedRight = speed - turnRate;
+        rcMotor1->setSpeed(speedRight);
+        rcMotor2->setSpeed(speedLeft);
+        rcMotor3->setSpeed(speedLeft);
         rcMotor4->setSpeed(speedRight);
     }
     rcMotor1->run(FORWARD);
@@ -95,24 +97,21 @@ void reverseRC(int speed, char direction, int turnRate)
         rcMotor4->setSpeed(speed);
     }
     if (direction == 'L'){
-        int speedLeft = speed + turnRate;
-        rcMotor1->setSpeed(speed);
-        rcMotor2->setSpeed(speedLeft);
-        rcMotor3->setSpeed(speedLeft);
-        rcMotor4->setSpeed(speed);
-    }
-    if (direction == 'R'){
+        int speedLeft = speed - turnRate;
         int speedRight = speed + turnRate;
         rcMotor1->setSpeed(speedRight);
-        rcMotor2->setSpeed(speed);
-        rcMotor3->setSpeed(speed);
+        rcMotor2->setSpeed(speedLeft);
+        rcMotor3->setSpeed(speedLeft);
         rcMotor4->setSpeed(speedRight);
     }
-    rcMotor1->setSpeed(speed);
-    rcMotor2->setSpeed(speed);
-    rcMotor3->setSpeed(speed);
-    rcMotor4->setSpeed(speed);
-
+    if (direction == 'R'){
+        int speedLeft = speed + turnRate;
+        int speedRight = speed - turnRate;
+        rcMotor1->setSpeed(speedRight);
+        rcMotor2->setSpeed(speedLeft);
+        rcMotor3->setSpeed(speedLeft);
+        rcMotor4->setSpeed(speedRight);
+    }
     rcMotor1->run(BACKWARD);
     rcMotor2->run(BACKWARD);
     rcMotor3->run(BACKWARD);
@@ -150,13 +149,13 @@ void loop() {
     }
 
     // Steering
-    if ((rc_values[RC_CH1] < 1640 ) && (rc_values[RC_CH1] > 1400)) {
+    if ((rc_values[RC_CH1] < 1640 ) && (rc_values[RC_CH1] > 1600)) {
         direction = 'N';
         turnRate = 0;
     }
-    if ((rc_values[RC_CH1] < 1400) && (rc_values[RC_CH1] > 900)) {
+    if ((rc_values[RC_CH1] < 1600) && (rc_values[RC_CH1] > 990)) {
         direction = 'L';
-        turnRate = map(rc_values[RC_CH1], 1400, 960, 0, 50);
+        turnRate = map(rc_values[RC_CH1], 1600, 1020, 0, 50);
         turnRate = constrain(turnRate, 0, 50);
     }
     if ((rc_values[RC_CH1] < 2200) && (rc_values[RC_CH1] > 1640)) {
@@ -169,9 +168,9 @@ void loop() {
     if ((rc_values[RC_CH2] <= 1640) && (rc_values[RC_CH2] >= 1400)) {
         neutralRC();
         // Standing Turn
-        if ((direction == 'L') || (direction = 'R')) {
-            forwardRC(0, direction, turnRate);
-        }
+        // if ((direction == 'L') || (direction = 'R')) {
+        //     forwardRC(0, direction, turnRate);
+        // }
         return;
     }
     if ((rc_values[RC_CH2] < 1400) && (rc_values[RC_CH2] > 900)) {
