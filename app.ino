@@ -1,3 +1,5 @@
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
 #include <EnableInterrupt.h>
@@ -11,6 +13,20 @@
 #define RC_CH1_INPUT  A0 //CH1 (Steering)
 #define RC_CH2_INPUT  A1 //CH2 (Throttle)
 #define RC_CH3_INPUT  A2 //CH3 (On/Off Aux Switch)
+
+// Values read from RC Receiver
+
+// Steering
+#define RC_CH1_LOW 990 
+#define RC_CH1_N_LOW 1600
+#define RC_CH1_N_HIGH 1640
+#define RC_CH1_HIGH 2100
+
+// Throttle
+#define RC_CH2_LOW 990
+#define RC_CH2_N_LOW 1600
+#define RC_CH2_N_HIGH 1640
+#define RC_CH2_HIGH 2100
 
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 Adafruit_DCMotor *rcMotor1 = AFMS.getMotor(1); // Left Front
@@ -117,27 +133,25 @@ void reverseRC(int speed, char direction, int turnRate)
     rcMotor3->run(BACKWARD);
     rcMotor4->run(BACKWARD);
 }
+
+void lcdDisplay(char text, char dir, int spd) {
+    // For future use
+    // Will display Speed, Direction, and status
+    // Using 
+    return;
+}
+
 void setup() {
     AFMS.begin();
-    rcMotor1->setSpeed(0);
-    rcMotor2->setSpeed(0);
-    rcMotor3->setSpeed(0);
-    rcMotor4->setSpeed(0);
-
-    rcMotor1->run(RELEASE);
-    rcMotor2->run(RELEASE);
-    rcMotor3->run(RELEASE);
-    rcMotor4->run(RELEASE);
+    neutralRC();
 
     pinMode(RC_CH1_INPUT, INPUT);
     pinMode(RC_CH2_INPUT, INPUT);
     pinMode(RC_CH3_INPUT, INPUT);
 
-
     enableInterrupt(RC_CH1_INPUT, calc_ch1, CHANGE);
     enableInterrupt(RC_CH2_INPUT, calc_ch2, CHANGE);
     enableInterrupt(RC_CH3_INPUT, calc_ch3, CHANGE);
-
 }
 
 void loop() {
@@ -145,44 +159,44 @@ void loop() {
     // Controller Off
     if (rc_values[RC_CH2] == 0) {
         neutralRC();
-        return;
+        continue;
     }
 
     // Steering
-    if ((rc_values[RC_CH1] < 1640 ) && (rc_values[RC_CH1] > 1600)) {
+    if ((rc_values[RC_CH1] < RC_CH1_N_HIGH ) && (rc_values[RC_CH1] > RC_CH1_N_LOW)) {
         direction = 'N';
         turnRate = 0;
     }
-    if ((rc_values[RC_CH1] < 1600) && (rc_values[RC_CH1] > 990)) {
+    if ((rc_values[RC_CH1] < RC_CH1_N_LOW) && (rc_values[RC_CH1] > RC_CH1_LOW)) {
         direction = 'L';
-        turnRate = map(rc_values[RC_CH1], 1600, 1020, 0, 50);
+        turnRate = map(rc_values[RC_CH1], RC_CH1_LOW, RC_CH1_N_LOW, 0, 50);
         turnRate = constrain(turnRate, 0, 50);
     }
-    if ((rc_values[RC_CH1] < 2200) && (rc_values[RC_CH1] > 1640)) {
+    if ((rc_values[RC_CH1] < RC_CH1_HIGH) && (rc_values[RC_CH1] > RC_CH1_N_HIGH)) {
         direction = 'R';
-        turnRate = map(rc_values[RC_CH1], 1640, 2200, 0, 50);
+        turnRate = map(rc_values[RC_CH1], RC_CH1_N_HIGH, RC_CH1_HIGH, 0, 50);
         turnRate = constrain(turnRate, 0, 50);
     }
 
     // Driving
-    if ((rc_values[RC_CH2] <= 1640) && (rc_values[RC_CH2] >= 1400)) {
+    if ((rc_values[RC_CH2] < RC_CH2_N_HIGH) && (rc_values[RC_CH2] > RC_CH2_N_LOW)) {
         neutralRC();
         // Standing Turn
         // if ((direction == 'L') || (direction = 'R')) {
         //     forwardRC(0, direction, turnRate);
         // }
-        return;
+        continue;
     }
-    if ((rc_values[RC_CH2] < 1400) && (rc_values[RC_CH2] > 900)) {
-        speed = map(rc_values[RC_CH2], 1400, 960, 0, 200);
+    if ((rc_values[RC_CH2] < RC_CH2_N_LOW) && (rc_values[RC_CH2] > RC_CH2_LOW)) {
+        speed = map(rc_values[RC_CH2], RC_CH2_N_LOW, RC_CH1_LOW, 0, 200);
         speed = constrain(speed, 0, 200);
         forwardRC(speed, direction, turnRate);
-        return;
+        continue;
     }
-    if ((rc_values[RC_CH2] > 1640) && (rc_values[RC_CH2] < 2200)) {
-        speed = map(rc_values[RC_CH2], 1640, 2150, 0, 200);
+    if ((rc_values[RC_CH2] > RC_CH2_N_HIGH) && (rc_values[RC_CH2] < RC_CH2_HIGH)) {
+        speed = map(rc_values[RC_CH2], RC_CH2_N_HIGH, RC_CH2_HIGH, 0, 200);
         speed = constrain(speed, 0, 200);
         reverseRC(speed, direction, turnRate);
-        return;
+        continue;
     }
 }

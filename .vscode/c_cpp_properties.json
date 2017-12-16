@@ -4,13 +4,17 @@
             "name": "Win32",
             "includePath": [
                 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino",
-                "D:\\Users\\ShadowMage\\Documents\\Arduino\\libraries\\Adafruit_Motor_Shield_V2_Library"
+                "D:\\Users\\ShadowMage\\Documents\\Arduino\\libraries\\Adafruit_Motor_Shield_V2_Library",
+                "D:\\Users\\ShadowMage\\Documents\\Arduino\\libraries\\Adafruit_SSD1306",
+                "D:\\Users\\ShadowMage\\Documents\\Arduino\\libraries\\Adafruit-GFX-Library-master"
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": false,
                 "path": [
                     "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino",
-                    "D:\\Users\\ShadowMage\\Documents\\Arduino\\libraries\\Adafruit_Motor_Shield_V2_Library"
+                    "D:\\Users\\ShadowMage\\Documents\\Arduino\\libraries\\Adafruit_Motor_Shield_V2_Library",
+                    "D:\\Users\\ShadowMage\\Documents\\Arduino\\libraries\\Adafruit_SSD1306",
+                    "D:\\Users\\ShadowMage\\Documents\\Arduino\\libraries\\Adafruit-GFX-Library-master"
                 ]
             },
             "intelliSenseMode": "msvc-x64"
